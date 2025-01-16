@@ -75,7 +75,7 @@ function Login({ intl }) {
   }, [startedOIDC, loginOIDCValues]);
 
   useEffect(() => {
-    if (options !== undefined && options.length === 2) {
+    if (options !== undefined && options.length === 1) {
       const singleOption = options[0];
       if (singleOption.id === 'oidc') {
         setStartedOIDC(true);
