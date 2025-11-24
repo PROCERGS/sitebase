@@ -50,7 +50,7 @@ function add_admin_password() {
 
 echo "Default S2I assemble script will begin"
 
-/usr/libexec/s2i/assemble
+#/usr/libexec/s2i/assemble
 rc=$?
 
 if [ $rc -eq 0 ]; then
@@ -83,6 +83,8 @@ if [ $rc -eq 0 ]; then
 
 	#replaces initial 1admin passowrd with env var
 	add_admin_password
+	echo "Final instance.yaml:"
+	cat ./instance.yaml
 	
 	echo "Executing make install..."
 	make install
