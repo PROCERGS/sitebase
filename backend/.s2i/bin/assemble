@@ -50,7 +50,7 @@ function add_admin_password() {
 
 echo "Default S2I assemble script will begin"
 
-#/usr/libexec/s2i/assemble
+/usr/libexec/s2i/assemble
 rc=$?
 
 if [ $rc -eq 0 ]; then
