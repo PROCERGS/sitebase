@@ -44,6 +44,10 @@ function add_admin_password() {
     # Replace the value of initial_user_password inside default_context
     sed -i "s|\(initial_user_password:\s*\).*|\1'${ADMIN_PASSWORD}'|" ./instance.yaml
 
+    # Ensure no tabs in instance.yaml
+    sed -i 's/\t/    /g' ./instance.yaml
+
+
     echo "Admin password successfully injected into instance.yaml"
 }
 
