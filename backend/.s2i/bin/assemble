@@ -26,11 +26,27 @@ function add_database_config() {
 
     db_storage: relstorage
     db_relstorage_postgresql_dsn: ${RELSTORAGE_DSN}
-    db_blob_mode: cache
+	db_blob_mode: cache
 EOF
 
     echo "Configuration added to instance.yaml"
 }
+
+
+# Add admin password to instance.yaml
+function add_admin_password() {
+    if [ -z "$ADMIN_PASSWORD" ]; then
+        echo "ERROR: ADMIN_PASSWORD environment variable is not set. Build cannot continue."
+        exit 1
+    fi
+
+    echo "Injecting admin password into instance.yaml"
+    # Replace the value of initial_user_password inside default_context
+    sed -i "s|\(initial_user_password:\s*\).*|\1'${ADMIN_PASSWORD}'|" ./instance.yaml
+
+    echo "Admin password successfully injected into instance.yaml"
+}
+
 
 echo "Default S2I assemble script will begin"
 
@@ -64,6 +80,9 @@ if [ $rc -eq 0 ]; then
 	if [ -n "$RELSTORAGE_DSN" ]; then
         add_database_config
     fi
+
+	#replaces initial 1admin passowrd with env var
+	add_admin_password
 	
 	echo "Executing make install..."
 	make install
