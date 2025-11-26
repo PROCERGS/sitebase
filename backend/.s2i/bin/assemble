@@ -42,6 +42,18 @@ function add_cors() {
     echo "Injecting cors policy into instance.yaml"
     # Replace the value of initial_user_password inside default_context
     sed -i "s|\(cors_allow_origin:\s*\).*|\1'${CORS_ALLOW_ORIGIN}'|" ./instance.yaml
+}
+
+# Add admin password to instance.yaml
+function add_admin_password() {
+    if [ -z "$ADMIN_PASSWORD" ]; then
+        echo "ERROR: ADMIN_PASSWORD environment variable is not set. Build cannot continue."
+        exit 1
+    fi
+
+    echo "Injecting admin password into instance.yaml"
+    # Replace the value of initial_user_password inside default_context
+    sed -i "s|\(initial_user_password:\s*\).*|\1'${ADMIN_PASSWORD}'|" ./instance.yaml
 
     # Ensure no tabs in instance.yaml
     sed -i 's/\t/    /g' ./instance.yaml
@@ -83,7 +95,13 @@ if [ $rc -eq 0 ]; then
         add_database_config
     fi
 
+	#replaces cors policy with env var
 	add_cors
+
+	#replaces initial admin passowrd with env var
+	add_admin_password
+	echo "Final instance.yaml:"
+	cat ./instance.yaml
 	
 	echo "Executing make install..."
 	make install
