@@ -40,7 +40,7 @@ function add_cors() {
     fi
 
     echo "Injecting cors policy into instance.yaml"
-    # Replace the value of initial_user_password inside default_context
+    # Replace the value of cors policy inside default_context
     sed -i "s|\(cors_allow_origin:\s*\).*|\1'${CORS_ALLOW_ORIGIN}'|" ./instance.yaml
 }
 
