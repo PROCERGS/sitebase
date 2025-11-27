@@ -32,6 +32,17 @@ EOF
     echo "Configuration added to instance.yaml"
 }
 
+# Add admin password to instance.yaml
+function add_cors() {
+    if [ -z "$CORS_ALLOW_ORIGIN" ]; then
+        echo "ERROR: CORS_ALLOW_ORIGIN environment variable is not set. Build cannot continue."
+        exit 1
+    fi
+
+    echo "Injecting cors policy into instance.yaml"
+    # Replace the value of cors policy inside default_context
+    sed -i "s|\(cors_allow_origin:\s*\).*|\1'${CORS_ALLOW_ORIGIN}'|" ./instance.yaml
+}
 
 # Add admin password to instance.yaml
 function add_admin_password() {
@@ -50,7 +61,6 @@ function add_admin_password() {
 
     echo "Admin password successfully injected into instance.yaml"
 }
-
 
 echo "Default S2I assemble script will begin"
 
@@ -85,7 +95,10 @@ if [ $rc -eq 0 ]; then
         add_database_config
     fi
 
-	#replaces initial 1admin passowrd with env var
+	#replaces cors policy with env var
+	add_cors
+
+	#replaces initial admin passowrd with env var
 	add_admin_password
 	echo "Final instance.yaml:"
 	cat ./instance.yaml
