@@ -32,16 +32,17 @@ EOF
     echo "Configuration added to instance.yaml"
 }
 
-# Add admin password to instance.yaml
+# Add cors to instance.yaml
 function add_cors() {
     if [ -z "$CORS_ALLOW_ORIGIN" ]; then
-        echo "ERROR: CORS_ALLOW_ORIGIN environment variable is not set. Build cannot continue."
-        exit 1
+        echo "CORS_ALLOW_ORIGIN is not set. Skipping CORS configuration."
+        return 0
     fi
 
-    echo "Injecting cors policy into instance.yaml"
-    # Replace the value of cors policy inside default_context
-    sed -i "s|\(cors_allow_origin:\s*\).*|\1'${CORS_ALLOW_ORIGIN}'|" ./instance.yaml
+    echo "Injecting CORS policy into instance.yaml"
+    # Append cors_enabled and cors_allow_origin under default_context
+    # Ensure proper indentation (assuming 4 spaces)
+    sed -i "/^default_context:/a\    cors_enabled: 'true'\n    cors_allow_origin: '${CORS_ALLOW_ORIGIN}'" ./instance.yaml
 }
 
 # Add admin password to instance.yaml
