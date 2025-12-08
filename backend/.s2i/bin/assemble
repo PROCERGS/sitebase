@@ -46,18 +46,6 @@ function add_cors() {
 }
 
 # Add admin password to instance.yaml
-function add_cors() {
-    if [ -z "$CORS_ALLOW_ORIGIN" ]; then
-        echo "ERROR: CORS_ALLOW_ORIGIN environment variable is not set. Build cannot continue."
-        exit 1
-    fi
-
-    echo "Injecting cors policy into instance.yaml"
-    # Replace the value of cors policy inside default_context
-    sed -i "s|\(cors_allow_origin:\s*\).*|\1'${CORS_ALLOW_ORIGIN}'|" ./instance.yaml
-}
-
-# Add admin password to instance.yaml
 function add_admin_password() {
     if [ -z "$ADMIN_PASSWORD" ]; then
         echo "ERROR: ADMIN_PASSWORD environment variable is not set. Build cannot continue."
