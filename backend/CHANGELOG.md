@@ -8,3 +8,21 @@
 -->
 
 <!-- towncrier release notes start -->
+
+## 1.0.0 (2026-02-12)
+
+{% if sections[] %}
+{% for category, val in definitions.items() if category in sections[] %}
+
+### {{ definitions[category]['name'] }}
+
+{% for text, values in sections[][category].items() %}
+- {{ text }} {{ values|join(', ') }}
+{% endfor %}
+
+{% endfor %}
+{% else %}
+No significant changes.
+
+
+{% endif %}

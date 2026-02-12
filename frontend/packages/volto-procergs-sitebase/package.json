@@ -1,6 +1,6 @@
 {
   "name": "volto-procergs-sitebase",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0",
   "description": "Projeto para site base",
   "main": "src/index.js",
   "license": "MIT",

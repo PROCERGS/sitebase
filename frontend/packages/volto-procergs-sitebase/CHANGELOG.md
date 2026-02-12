@@ -7,3 +7,9 @@
 -->
 
 <!-- towncrier release notes start -->
+
+## 1.0.0 (2026-02-12)
+
+### Feature
+
+- Adiciona autenticação com volto-authomatic (@samoel-silva) [#2](https://github.com/PROCERGS/volto-procergs-sitebase/issue/2)
