@@ -55,6 +55,7 @@ services:
       context: ./frontend
       args:
         - VOLTO_VERSION=${VOLTO_VERSION}
+        - PROD_CONFIG_IMAGE=${FRONTEND_PROD_CONFIG_IMAGE}
     environment:
       RAZZLE_INTERNAL_API_PATH: http://backend:8080/Plone
     depends_on:
@@ -81,6 +82,7 @@ services:
       context: ./backend
       args:
         - PLONE_VERSION=${PLONE_VERSION}
+        - PROD_CONFIG_IMAGE=${BACKEND_PROD_CONFIG_IMAGE}
     environment:
       RELSTORAGE_DSN: "dbname='${DB_NAME:-plone}' user='${DB_NAME:-plone}' host='${DB_HOST:-db}' password='${DB_PASSWORD:-NwUNXCDsHSsd}' port='${DB_PORT:-5432}'"
     depends_on:

@@ -1,5 +1,6 @@
 # syntax=docker/dockerfile:1
 ARG VOLTO_VERSION
+ARG PROD_CONFIG_IMAGE=plone/frontend-prod-config:${VOLTO_VERSION}
 FROM plone/frontend-builder:${VOLTO_VERSION} AS builder
 
 COPY --chown=node packages/volto-procergs-sitebase /app/packages/volto-procergs-sitebase
@@ -18,7 +19,7 @@ RUN --mount=type=cache,id=pnpm,target=/app/.pnpm-store,uid=1000 <<EOT
     pnpm install --prod
 EOT
 
-FROM plone/frontend-prod-config:${VOLTO_VERSION}
+FROM ${PROD_CONFIG_IMAGE}
 
 LABEL maintainer="PROCERGS <sites@procergs.rs.gov.br>" \
       org.label-schema.name="sitebase-frontend" \

@@ -1,5 +1,6 @@
 # syntax=docker/dockerfile:1
 ARG PLONE_VERSION=6.1.1
+ARG PROD_CONFIG_IMAGE=plone/server-prod-config:${PLONE_VERSION}
 FROM plone/server-builder:${PLONE_VERSION} AS builder
 
 WORKDIR /app
@@ -22,7 +23,7 @@ RUN <<EOT
     ../bin/python /compile_mo.py
 EOT
 
-FROM plone/server-prod-config:${PLONE_VERSION}
+FROM ${PROD_CONFIG_IMAGE}
 
 LABEL maintainer="procergs <sites@procergs.rs.gov.br>" \
       org.label-schema.name="sitebase-backend" \
