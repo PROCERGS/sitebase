@@ -18,6 +18,10 @@ YELLOW=`tput setaf 3`
 IMAGE_NAME_PREFIX=ghcr.io/procergs/sitebase
 IMAGE_TAG=latest
 
+# Extra Python packages to install after the main mxdev install.
+# Passed from the root Makefile via .env (BACKEND_ADD_PACKAGES).
+ADD_PACKAGES ?=
+
 # Python checks
 UV?=uv
 
@@ -70,6 +74,10 @@ config: instance/etc/zope.ini
 
 .PHONY: install
 install: $(VENV_FOLDER) config ## Install Plone and dependencies
+	if [ -n "$(ADD_PACKAGES)" ]; then
+		echo "$(GREEN)==> Installing extra backend packages$(RESET)"
+		bash $(BACKEND_FOLDER)/scripts/add_packages.sh "$(UV)" "$(ADD_PACKAGES)"
+	fi
 
 .PHONY: clean
 clean: ## Clean installation and instance

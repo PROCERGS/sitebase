@@ -1,16 +1,16 @@
 # syntax=docker/dockerfile:1
 ARG PLONE_VERSION=6.1.1
-ARG PROD_CONFIG_IMAGE=plone/server-prod-config:${PLONE_VERSION}
+ARG PROD_CONFIG_IMAGE=plone/server-prod-config:6.1.1
 FROM plone/server-builder:${PLONE_VERSION} AS builder
 
 WORKDIR /app
-
 
 # Add local code
 COPY scripts/ scripts/
 COPY . src
 
 # Install local requirements and pre-compile mo files
+ARG ADD_PACKAGES=""
 RUN <<EOT
     set -e
     bin/pip install mxdev uv
@@ -20,6 +20,7 @@ RUN <<EOT
     rm -rf .venv
     ../bin/mxdev -c mx.ini
     ../bin/uv pip install -r requirements-mxdev.txt
+    bash /app/scripts/add_packages.sh "../bin/uv" "${ADD_PACKAGES}"
     ../bin/python /compile_mo.py
 EOT
 

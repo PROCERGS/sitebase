@@ -28,6 +28,12 @@ IMAGE_NAME=ghcr.io/PROCERGS/sitebase-frontend
 IMAGE_TAG=latest
 VOLTO_VERSION = $(shell cat ./mrs.developer.json | python -c "import sys, json; print(json.load(sys.stdin)['core']['tag'])")
 
+# Extra packages/addons to inject before pnpm install.
+# Passed from the root Makefile via .env (FRONTEND_ADD_PACKAGES / FRONTEND_ADD_ADDONS / FRONTEND_ADD_MRSDEVELOPER).
+ADD_PACKAGES ?=
+ADD_ADDONS ?=
+ADD_MRSDEVELOPER ?=
+
 .PHONY: help
 help: ## Show this help
 	@echo -e "$$(grep -hE '^\S+:.*##' $(MAKEFILE_LIST) | sed -e 's/:.*##\s*/:/' -e 's/^\(.\+\):\(.*\)/\\x1b[36m\1\\x1b[m:\2/' | column -c2 -t -s :)"
@@ -40,6 +46,18 @@ clean: ## Clean environment
 
 .PHONY: install
 install: ## Installs the add-on in a development environment
+	if [ -n "$(ADD_PACKAGES)" ]; then
+		echo "$(GREEN)==> Injecting extra frontend packages$(RESET)"
+		bash $(CURRENT_DIR)/scripts/add_packages.sh "$(ADD_PACKAGES)"
+	fi
+	if [ -n "$(ADD_ADDONS)" ]; then
+		echo "$(GREEN)==> Registering extra Volto addons$(RESET)"
+		bash $(CURRENT_DIR)/scripts/add_addons.sh "$(ADD_ADDONS)"
+	fi
+	if [ -n "$(ADD_MRSDEVELOPER)" ]; then
+		echo "$(GREEN)==> Merging mrs-developer entries$(RESET)"
+		bash $(CURRENT_DIR)/scripts/add_mrsdeveloper.sh "$(ADD_MRSDEVELOPER)"
+	fi
 	pnpm dlx mrs-developer missdev --no-config --fetch-https
 	pnpm i
 	make build-deps

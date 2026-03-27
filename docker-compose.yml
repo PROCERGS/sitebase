@@ -51,11 +51,17 @@ services:
     depends_on:
       - backend
   frontend:
+    image: ${FRONTEND_IMAGE:-sitebase-frontend}
     build:
       context: ./frontend
       args:
         - VOLTO_VERSION=${VOLTO_VERSION}
-        - PROD_CONFIG_IMAGE=${FRONTEND_PROD_CONFIG_IMAGE}
+        - PROD_CONFIG_IMAGE=${FRONTEND_PROD_CONFIG_IMAGE:-plone/frontend-prod-config:18.23.0}
+        - ADD_PACKAGES=${FRONTEND_ADD_PACKAGES}
+        - ADD_ADDONS=${FRONTEND_ADD_ADDONS}
+        - SET_THEME=${FRONTEND_SET_THEME}
+        - ADD_MRSDEVELOPER=${FRONTEND_ADD_MRSDEVELOPER}
+        - ADD_PNPM_WORKSPACE=${FRONTEND_ADD_PNPM_WORKSPACE}
     environment:
       RAZZLE_INTERNAL_API_PATH: http://backend:8080/Plone
     depends_on:
@@ -78,11 +84,13 @@ services:
       - traefik.http.routers.rt-frontend-internal.service=svc-frontend
 
   backend:
+    image: ${BACKEND_IMAGE:-sitebase-backend}
     build:
       context: ./backend
       args:
         - PLONE_VERSION=${PLONE_VERSION}
-        - PROD_CONFIG_IMAGE=${BACKEND_PROD_CONFIG_IMAGE}
+        - PROD_CONFIG_IMAGE=${BACKEND_PROD_CONFIG_IMAGE:-plone/server-prod-config:6.1.1}
+        - ADD_PACKAGES=${BACKEND_ADD_PACKAGES}
     environment:
       RELSTORAGE_DSN: "dbname='${DB_NAME:-plone}' user='${DB_NAME:-plone}' host='${DB_HOST:-db}' password='${DB_PASSWORD:-NwUNXCDsHSsd}' port='${DB_PORT:-5432}'"
     depends_on:
@@ -131,7 +139,7 @@ services:
     image: postgres:14.15
     environment:
       POSTGRES_USER: plone
-      POSTGRES_PASSWORD: NwUNXCDsHSsd
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-NwUNXCDsHSsd}
       POSTGRES_DB: plone
     volumes:
       - vol-site-data:/var/lib/postgresql/data

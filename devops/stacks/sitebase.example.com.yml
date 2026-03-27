@@ -195,7 +195,7 @@ services:
     image: postgres:14.15
     environment:
       POSTGRES_USER: plone
-      POSTGRES_PASSWORD: NwUNXCDsHSsd
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-NwUNXCDsHSsd}
       POSTGRES_DB: plone
     deploy:
       replicas: 1

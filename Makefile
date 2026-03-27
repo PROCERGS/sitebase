@@ -11,11 +11,22 @@ MAKEFLAGS+=--no-builtin-rules
 CURRENT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 GIT_FOLDER=$(CURRENT_DIR)/.git
 
+# Load site-specific overrides from .env if present.
+# Copy .env.dist to .env and customize to set extra addons, image names, etc.
+# The same .env is also read automatically by docker compose.
+-include $(CURRENT_DIR)/.env
+
 PROJECT_NAME=sitebase
 STACK_NAME=sitebase-example-com
 
 VOLTO_VERSION = $(shell cat frontend/mrs.developer.json | python -c "import sys, json; print(json.load(sys.stdin)['core']['tag'])")
 PLONE_VERSION=$(shell cat backend/version.txt)
+
+# Extra addons/packages — read from .env, empty by default
+BACKEND_ADD_PACKAGES ?=
+FRONTEND_ADD_PACKAGES ?=
+FRONTEND_ADD_ADDONS ?=
+FRONTEND_ADD_MRSDEVELOPER ?=
 
 # We like colors
 # From: https://coderwall.com/p/izxssa/colored-makefile-for-golang-projects
@@ -38,7 +49,10 @@ help: ## This help message
 ###########################################
 .PHONY: frontend-install
 frontend-install:  ## Install React Frontend
-	$(MAKE) -C "./frontend/" install
+	$(MAKE) -C "./frontend/" install \
+		ADD_PACKAGES="$(FRONTEND_ADD_PACKAGES)" \
+		ADD_ADDONS="$(FRONTEND_ADD_ADDONS)" \
+		ADD_MRSDEVELOPER="$(FRONTEND_ADD_MRSDEVELOPER)"
 
 .PHONY: frontend-build
 frontend-build:  ## Build React Frontend
@@ -58,7 +72,8 @@ frontend-test:  ## Test frontend codebase
 ###########################################
 .PHONY: backend-install
 backend-install:  ## Create virtualenv and install Plone
-	$(MAKE) -C "./backend/" install
+	$(MAKE) -C "./backend/" install \
+		ADD_PACKAGES="$(BACKEND_ADD_PACKAGES)"
 	$(MAKE) backend-create-site
 
 .PHONY: backend-build
