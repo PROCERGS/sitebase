@@ -17,7 +17,17 @@ ARG ADD_MRSDEVELOPER=""
 ARG ADD_PNPM_WORKSPACE=""
 RUN --mount=type=cache,id=pnpm,target=/app/.pnpm-store,uid=1000 <<EOT
     set -e
-    python3 -c "import json; orig_data = json.load(open('package.json.temp')); orig_deps = orig_data['dependencies']; data = json.load(open('package.json')); data['dependencies'].update(orig_deps); json.dump(data, open('package.json', 'w'), indent=2)"
+    python3 <<PYTHON
+import json
+orig_data = json.load(open('package.json.temp'))
+orig_deps = orig_data['dependencies']
+orig_pnpm = orig_data.get('pnpm', {})
+data = json.load(open('package.json'))
+data['dependencies'].update(orig_deps)
+if orig_pnpm:
+    data['pnpm'] = orig_pnpm
+json.dump(data, open('package.json', 'w'), indent=2)
+PYTHON
     rm package.json.temp
     bash /app/scripts/add_packages.sh "${ADD_PACKAGES}"
     bash /app/scripts/add_addons.sh "${ADD_ADDONS}"
@@ -28,6 +38,13 @@ RUN --mount=type=cache,id=pnpm,target=/app/.pnpm-store,uid=1000 <<EOT
     pnpm install && pnpm build:deps
     pnpm build
     pnpm install --prod
+    # Remove legacy babel@6 packages not reachable by pnpm overrides (CVE-2023-45133)
+    rm -rf node_modules/.pnpm/babel-traverse@6.26.0 \
+           node_modules/.pnpm/babel-plugin-transform-class-properties@6.24.1 \
+           node_modules/.pnpm/babel-helper-function-name@6.24.1 \
+           node_modules/.pnpm/babel-template@6.26.0 \
+           node_modules/.pnpm/babel-types@6.26.0 \
+           node_modules/.pnpm/babel-runtime@6.26.0
 EOT
 
 FROM ${PROD_CONFIG_IMAGE}
