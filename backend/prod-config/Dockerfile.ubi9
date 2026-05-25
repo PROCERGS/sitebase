@@ -1,0 +1,57 @@
+# syntax=docker/dockerfile:1
+# Custom prod-config base image using Red Hat UBI9 Python
+# Build: docker build -f Dockerfile.prod-config-ubi9 -t sitebase-prod-config:ubi9 .
+
+FROM registry.access.redhat.com/ubi9/python-312:latest
+
+USER 0
+
+LABEL maintainer="procergs <sites@procergs.rs.gov.br>" \
+      org.label-schema.name="sitebase-prod-config-ubi9" \
+      org.label-schema.description="Plone production base using UBI9 Python 3.12" \
+      org.label-schema.vendor="Red Hat + procergs"
+
+# Install runtime dependencies
+# Package mapping: Debian -> RHEL equivalents
+RUN dnf install -y --nodocs \
+        ca-certificates \
+        git \
+        libjpeg-turbo \
+        openjpeg2 \
+        postgresql \
+        libtiff \
+        libxml2 \
+        libxslt \
+        nmap-ncat \
+        poppler-utils \
+        rsync \
+        file \
+        make \
+        wget && \
+    dnf clean all && \
+    rm -rf /var/cache/dnf
+
+# Create plone user matching Plone conventions (uid 500)
+RUN useradd --system -m -d /app -u 500 plone && \
+    mkdir -p /data/{filestorage,blobstorage,cache,logs} && \
+    chown -R 500:500 /data
+
+# Environment variables
+ENV DEBUG_MODE=off
+ENV CHAMELEON_CACHE=/app/var/cache
+ENV zope_i18n_compile_mo_files=
+
+# Expose /data as a volume
+VOLUME /data
+
+# Expose Zope Port
+EXPOSE 8080
+
+# Use /app as the workdir
+WORKDIR /app
+
+# Set healthcheck to port 8080
+HEALTHCHECK --interval=10s --timeout=5s --start-period=60s CMD [ -n "$LISTEN_PORT" ] || LISTEN_PORT=8080 ; wget -q http://127.0.0.1:"$LISTEN_PORT"/ok -O - | grep OK || exit 1
+
+ENTRYPOINT [ "/app/docker-entrypoint.sh" ]
+CMD ["start"]

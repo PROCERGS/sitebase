@@ -38,18 +38,18 @@ PYTHON
     pnpm install && pnpm build:deps
     pnpm build
     pnpm install --prod
-    # Remove vulnerable packages that survive pnpm install --prod or pnpm overrides
-    # babel@6 (CVE-2023-45133)
     rm -rf node_modules/.pnpm/babel-traverse@6.26.0 \
            node_modules/.pnpm/babel-plugin-transform-class-properties@6.24.1 \
            node_modules/.pnpm/babel-helper-function-name@6.24.1 \
            node_modules/.pnpm/babel-template@6.26.0 \
            node_modules/.pnpm/babel-types@6.26.0 \
            node_modules/.pnpm/babel-runtime@6.26.0
-    # form-data@4.0.3 (CVE-2025-7783) — override exists but package may still be bundled
-    rm -rf node_modules/.pnpm/form-data@4.0.3
-    # simple-git@3.28.0 (CVE-2026-28292) — build-time dep of mrs-developer, not needed at runtime
+    rm -rf node_modules/.pnpm/form-data@2.3.3 \
+           node_modules/.pnpm/form-data@2.5.3 \
+           node_modules/.pnpm/form-data@3.0.3 \
+           node_modules/.pnpm/form-data@4.0.3
     rm -rf node_modules/.pnpm/simple-git@3.28.0
+    rm -rf node_modules/.pnpm/basic-ftp@5.0.5
 EOT
 
 FROM ${PROD_CONFIG_IMAGE}

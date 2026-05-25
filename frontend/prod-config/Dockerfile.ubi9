@@ -1,0 +1,57 @@
+# syntax=docker/dockerfile:1
+# Custom frontend prod-config base image using Red Hat UBI9 Node.js 20
+# Replaces the Debian Trixie variant for OpenShift / Red Hat support.
+# Build: docker build -f Dockerfile.ubi9 -t sitebase-frontend-prod-config:ubi9 .
+
+FROM registry.access.redhat.com/ubi9/nodejs-20:latest
+
+LABEL maintainer="PROCERGS <sites@procergs.rs.gov.br>" \
+      org.label-schema.name="sitebase-frontend-prod-config-ubi9" \
+      org.label-schema.description="Volto/Plone frontend production base using UBI9 Node.js 20" \
+      org.label-schema.vendor="Red Hat + PROCERGS"
+
+USER 0
+
+# Install runtime dependencies
+# wget  — healthcheck
+# git   — mrs-developer (mrs-developer missdev uses git at build time; also used in prod-config stage)
+# ca-certificates — HTTPS trust
+RUN dnf install -y --nodocs \
+        ca-certificates \
+        git \
+        wget && \
+    dnf clean all && \
+    rm -rf /var/cache/dnf
+
+# Create 'node' user at uid 1000 to match plone/frontend-builder conventions.
+# Consistent uid across builder and prod-config stages avoids ownership issues
+# in COPY --from=builder instructions in the outer Dockerfile.
+# Primary group 0 (root group) follows OpenShift arbitrary-uid best practice.
+RUN useradd -m -d /home/node -u 1000 -g 0 -s /sbin/nologin node && \
+    mkdir -p /app && \
+    chown -R 1000:0 /app && \
+    chmod -R g=u /app
+
+# Install and enable corepack for pnpm (official Plone requirement).
+# Runs as root so the global corepack shims land in /usr/local/bin.
+RUN npm i -g corepack@latest && corepack enable
+
+# Switch to non-root user before runtime steps
+USER node
+
+WORKDIR /app
+
+# Pre-download pnpm@9 into the corepack cache so the first build/run
+# does not need outbound internet access.
+RUN corepack use pnpm@9
+
+EXPOSE 3000
+
+HEALTHCHECK --interval=10s --timeout=5s --start-period=30s \
+    CMD [ -n "$LISTEN_PORT" ] || LISTEN_PORT=3000 ; wget -q http://127.0.0.1:"$LISTEN_PORT" -O - || exit 1
+
+ENV NODE_ENV=production
+ENV RAZZLE_NODE_ENV=production
+
+ENTRYPOINT ["pnpm"]
+CMD ["start:prod"]
