@@ -37,4 +37,8 @@ COPY --from=builder /app /app
 RUN <<EOT
     set -e
     ln -s /data /app/var
+    # Ensure group 0 (root) can access everything — required for
+    # OpenShift's random UID (which runs in gid 0).
+    chgrp -R 0 /app
+    chmod -R g=u /app
 EOT
