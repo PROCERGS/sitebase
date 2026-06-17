@@ -26,7 +26,10 @@ PLONE_VERSION=$(shell cat backend/version.txt)
 BACKEND_ADD_PACKAGES ?=
 FRONTEND_ADD_PACKAGES ?=
 FRONTEND_ADD_ADDONS ?=
+FRONTEND_SET_THEME ?=
 FRONTEND_ADD_MRSDEVELOPER ?=
+FRONTEND_ADD_PNPM_WORKSPACE ?=
+
 
 # We like colors
 # From: https://coderwall.com/p/izxssa/colored-makefile-for-golang-projects
@@ -49,10 +52,14 @@ help: ## This help message
 ###########################################
 .PHONY: frontend-install
 frontend-install:  ## Install React Frontend
+	# ADD_MRSDEVELOPER is single-quoted because its value is JSON containing double quotes.
+	# The other variables are simple comma-separated strings, so double quotes are fine.
 	$(MAKE) -C "./frontend/" install \
 		ADD_PACKAGES="$(FRONTEND_ADD_PACKAGES)" \
 		ADD_ADDONS="$(FRONTEND_ADD_ADDONS)" \
-		ADD_MRSDEVELOPER="$(FRONTEND_ADD_MRSDEVELOPER)"
+		SET_THEME="$(FRONTEND_SET_THEME)" \
+		ADD_MRSDEVELOPER='$(FRONTEND_ADD_MRSDEVELOPER)' \
+		ADD_PNPM_WORKSPACE="$(FRONTEND_ADD_PNPM_WORKSPACE)"
 
 .PHONY: frontend-build
 frontend-build:  ## Build React Frontend
