@@ -1,0 +1,2 @@
+export declare type Task = () => Promise<string | boolean>;
+export default function execute(tasks: Task[]): Promise<string | boolean>;

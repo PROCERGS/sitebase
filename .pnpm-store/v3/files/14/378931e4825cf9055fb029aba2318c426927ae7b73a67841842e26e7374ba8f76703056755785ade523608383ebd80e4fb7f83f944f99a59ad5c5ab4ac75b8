@@ -1,0 +1,7 @@
+/// <reference types="node" />
+import { WriteStream } from 'fs';
+/**
+ * Create a folder and return a writable stream.
+ * @param path The path to write a file
+ */
+export default function write(path: string): Promise<WriteStream>;

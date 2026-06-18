@@ -1,0 +1,33 @@
+{
+  "name": "why",
+  "version": "0.6.2",
+  "description": "A tool to document your package.json scripts",
+  "main": "src/index.js",
+  "bin": "src/index.js",
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "prepare": "./support/scripts/symlink-root.sh && husky install",
+    "postinstall": "./src/postinstall.js",
+    "test": "echo 'add tests'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/strdr4605/why.git"
+  },
+  "author": "Dragoș Străinu @strdr4605",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/strdr4605/why/issues"
+  },
+  "homepage": "https://github.com/strdr4605/why#readme",
+  "devDependencies": {
+    "@commitlint/cli": "^16.2.3",
+    "@commitlint/config-conventional": "^16.2.1",
+    "eslint": "^8.11.0",
+    "husky": "^7.0.4",
+    "lint-staged": "^12.3.7",
+    "prettier": "2.6.0"
+  }
+}

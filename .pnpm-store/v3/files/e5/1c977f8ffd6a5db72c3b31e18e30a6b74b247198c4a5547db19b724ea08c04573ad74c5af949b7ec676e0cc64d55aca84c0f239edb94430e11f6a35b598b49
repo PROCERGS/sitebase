@@ -1,0 +1,30 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const parse_1 = require("../parse");
+const tar_1 = require("../tar");
+describe('utils/tar', () => {
+    describe('getUrl()', () => {
+        it('should return a github url to the zipped file', () => {
+            expect(tar_1.getUrl(parse_1.default('iwatakeshi/test')))
+                .toEqual('https://github.com/iwatakeshi/test/archive/master.tar.gz');
+        });
+        it('should return a bitbucket url to the zipped file', () => {
+            expect(tar_1.getUrl(parse_1.default('bitbucket:iwatakeshi/test')))
+                .toEqual('https://bitbucket.org/iwatakeshi/test/get/master.tar.gz');
+        });
+        it('should return a gitlab url to the zipped file', () => {
+            expect(tar_1.getUrl(parse_1.default('gitlab:iwatakeshi/test')))
+                .toEqual('https://gitlab.com/iwatakeshi/test/repository/archive.tar.gz?ref=master');
+        });
+        it('should return a custom url to the zipped file', () => {
+            expect(tar_1.getUrl(parse_1.default('iwatakeshi/test'), {
+                url: {
+                    filter(info) {
+                        return `https://domain.com${info.path}/repo/archive.tar.gz?ref=${info.type}`;
+                    }
+                }
+            }))
+                .toEqual('https://domain.com/iwatakeshi/test/repo/archive.tar.gz?ref=master');
+        });
+    });
+});

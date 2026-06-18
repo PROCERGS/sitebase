@@ -1,0 +1,19 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const fs_1 = require("fs");
+const path_1 = require("path");
+const parse_1 = require("./parse");
+const tar_1 = require("./tar");
+async function exists(path, options = {}) {
+    if (!path_1.isAbsolute(path)) {
+        path = tar_1.getFile(parse_1.default(path), options);
+    }
+    try {
+        await fs_1.promises.access(path, fs_1.constants.F_OK);
+        return true;
+        // eslint-disable-next-line no-empty
+    }
+    catch (_) { }
+    return false;
+}
+exports.default = exists;

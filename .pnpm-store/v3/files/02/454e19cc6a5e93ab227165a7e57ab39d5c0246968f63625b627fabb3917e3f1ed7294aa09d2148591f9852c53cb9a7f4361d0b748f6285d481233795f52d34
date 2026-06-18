@@ -1,0 +1,76 @@
+/// <reference types="node" />
+export declare enum GitlyErrorType {
+    Fetch = "fetch",
+    Extract = "extract",
+    Download = "download",
+    Unknown = "unknown"
+}
+export default abstract class GitlyAbstractError extends Error {
+    readonly message: string;
+    readonly code: number;
+    static type: GitlyErrorType;
+    type: GitlyErrorType;
+    rawMessage: string;
+    constructor(message: string, code?: number);
+    get ctor(): typeof GitlyAbstractError;
+}
+export declare const GitlyUknownError: {
+    new (message: string, code?: number): {
+        type: GitlyErrorType;
+        rawMessage: string;
+        readonly message: string;
+        readonly code: number;
+        readonly ctor: typeof GitlyAbstractError;
+        name: string;
+        stack?: string | undefined;
+    };
+    type: GitlyErrorType;
+    captureStackTrace(targetObject: object, constructorOpt?: Function | undefined): void;
+    prepareStackTrace?: ((err: Error, stackTraces: NodeJS.CallSite[]) => any) | undefined;
+    stackTraceLimit: number;
+};
+export declare const GitlyFetchError: {
+    new (message: string, code?: number): {
+        type: GitlyErrorType;
+        rawMessage: string;
+        readonly message: string;
+        readonly code: number;
+        readonly ctor: typeof GitlyAbstractError;
+        name: string;
+        stack?: string | undefined;
+    };
+    type: GitlyErrorType;
+    captureStackTrace(targetObject: object, constructorOpt?: Function | undefined): void;
+    prepareStackTrace?: ((err: Error, stackTraces: NodeJS.CallSite[]) => any) | undefined;
+    stackTraceLimit: number;
+};
+export declare const GitlyExtractError: {
+    new (message: string, code?: number): {
+        type: GitlyErrorType;
+        rawMessage: string;
+        readonly message: string;
+        readonly code: number;
+        readonly ctor: typeof GitlyAbstractError;
+        name: string;
+        stack?: string | undefined;
+    };
+    type: GitlyErrorType;
+    captureStackTrace(targetObject: object, constructorOpt?: Function | undefined): void;
+    prepareStackTrace?: ((err: Error, stackTraces: NodeJS.CallSite[]) => any) | undefined;
+    stackTraceLimit: number;
+};
+export declare const GitlyDownloadError: {
+    new (message: string, code?: number): {
+        type: GitlyErrorType;
+        rawMessage: string;
+        readonly message: string;
+        readonly code: number;
+        readonly ctor: typeof GitlyAbstractError;
+        name: string;
+        stack?: string | undefined;
+    };
+    type: GitlyErrorType;
+    captureStackTrace(targetObject: object, constructorOpt?: Function | undefined): void;
+    prepareStackTrace?: ((err: Error, stackTraces: NodeJS.CallSite[]) => any) | undefined;
+    stackTraceLimit: number;
+};

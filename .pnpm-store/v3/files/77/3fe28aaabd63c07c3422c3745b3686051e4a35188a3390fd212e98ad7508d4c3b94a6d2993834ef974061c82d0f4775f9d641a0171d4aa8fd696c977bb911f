@@ -1,0 +1,15 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const fs_1 = require("fs");
+const path_1 = require("path");
+const { mkdir } = fs_1.promises;
+/**
+ * Create a folder and return a writable stream.
+ * @param path The path to write a file
+ */
+async function write(path) {
+    path = path_1.normalize(path);
+    await mkdir(path_1.dirname(path), { recursive: true });
+    return fs_1.createWriteStream(path);
+}
+exports.default = write;

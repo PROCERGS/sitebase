@@ -1,0 +1,15 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.isOffline = void 0;
+const dns_1 = require("dns");
+const { lookup } = dns_1.promises;
+async function isOffline() {
+    try {
+        await lookup('google.com');
+        return false;
+        // eslint-disable-next-line no-empty
+    }
+    catch (_) { }
+    return true;
+}
+exports.isOffline = isOffline;

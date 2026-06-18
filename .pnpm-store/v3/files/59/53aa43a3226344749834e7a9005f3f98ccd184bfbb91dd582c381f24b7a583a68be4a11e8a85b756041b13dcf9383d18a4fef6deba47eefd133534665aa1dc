@@ -1,0 +1,30 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const fs_1 = require("fs");
+const path_1 = require("path");
+const exists_1 = require("./exists");
+const tar_1 = require("./tar");
+const { mkdir } = fs_1.promises;
+/**
+ * Extract a zipped file to the specified destination
+ * @param source The source zipped file
+ * @param destination The path to extract the zipped file
+ * @param options
+ *
+ */
+exports.default = async (source, destination, options = {}) => {
+    destination = path_1.resolve(destination);
+    if (await exists_1.default(source, options)) {
+        try {
+            const filter = options.extract && options.extract.filter
+                ? options.extract.filter
+                : () => true;
+            await mkdir(destination, { recursive: true });
+            await tar_1.extract({ strip: 1, filter, file: source, cwd: destination });
+            return destination;
+            // eslint-disable-next-line no-empty
+        }
+        catch (_) { }
+    }
+    return '';
+};

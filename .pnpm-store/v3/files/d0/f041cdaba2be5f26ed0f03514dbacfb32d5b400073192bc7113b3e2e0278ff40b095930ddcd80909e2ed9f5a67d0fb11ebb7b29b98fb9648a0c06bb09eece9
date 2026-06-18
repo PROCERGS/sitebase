@@ -1,0 +1,18 @@
+import GitlyOptions from '../interfaces/options';
+import URLInfo from '../interfaces/url';
+declare const _default: (url: string, options?: GitlyOptions) => URLInfo;
+/**
+ * Parses a url and returns the metadata
+ *
+ * @example
+ * ```markdown
+ * 1. owner/repo
+ * 2. owner/repo#tag
+ * 3. https://host.com/owner/repo
+ * 4. host.com/owner/repo
+ * 5. host.com/owner/repo#tag
+ * 6. host:owner/repo
+ * 7. host:owner/repo#tag
+ * ```
+ */
+export default _default;

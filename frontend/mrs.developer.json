@@ -6,20 +6,6 @@
     "https": "https://github.com/plone/volto.git",
     "tag": "18.23.0",
     "filterBlobs": true
-  },
-  "volto-site-componentes": {
-    "url": "git@github.com:PROCERGS/volto-site-componentes.git",
-    "package": "volto-site-componentes",
-    "https": "https://github.com/PROCERGS/volto-site-componentes.git",     
-    "branch": "main",     
-    "output": "./packages/"
-  },   
-  "volto-custom-light-theme": {     
-    "url": "git@github.com:PROCERGS/volto-custom-light-theme.git",     
-    "package": "volto-custom-light-theme",     
-    "https": "https://github.com/PROCERGS/volto-custom-light-theme.git",     
-    "branch": "main",     
-    "output": "./packages/"   
   },   
   "volto-dsgvo-banner": {     
     "url": "git@github.com:PROCERGS/volto-dsgvo-banner.git",     
@@ -27,5 +13,12 @@
     "https": "https://github.com/PROCERGS/volto-dsgvo-banner.git",     
     "branch": "main",     
     "output": "./packages/"   
+  },
+  "procergs-tema": {
+    "url": "git@github.com:PROCERGS/procergs-tema.git",
+    "package": "procergs-tema",
+    "https": "https://github.com/PROCERGS/procergs-tema.git",
+    "branch": "main",
+    "output": "./packages/"
   }
 }

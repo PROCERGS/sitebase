@@ -88,11 +88,7 @@ module.exports = {
     },
   },
   webpackFinal: async (config, { configType }) => {
-    // `configType` has a value of 'DEVELOPMENT' or 'PRODUCTION'
-    // You can change the configuration based on that.
-    // 'PRODUCTION' is used when building the static version of storybook.
 
-    // Adiciona o loader Babel para processar JSX(no caso necessário para transcrição do preview.jsx na build do storybook)
     config.module.rules.push({
       test: /\.(js|jsx|ts|tsx)$/,
       exclude: /node_modules/,
@@ -104,13 +100,12 @@ module.exports = {
       },
     });
 
-    // Make whatever fine-grained changes you need
     let baseConfig;
     baseConfig = await createConfig(
       'web',
       'dev',
       {
-        // clearConsole: false,
+
         modifyWebpackConfig: razzleConfig.modifyWebpackConfig,
         plugins: razzleConfig.plugins,
       },
@@ -138,8 +133,6 @@ module.exports = {
       options: { razzleOptions: {} },
     });
 
-    // Put the SVG loader on top and prevent the asset/resource rule
-    // from processing the app's SVGs
     config.module.rules.unshift(SVGLOADER);
     const fileLoaderRule = config.module.rules.find((rule) =>
       rule.test.test('.svg'),
@@ -167,25 +160,24 @@ module.exports = {
       },
     };
 
-    // Add-ons have to be loaded with babel
     const addonPaths = registry
       .getAddons()
       .map((addon) => fs.realpathSync(addon.modulePath));
 
     resultConfig.module.rules[13].exclude = (input) =>
-      // exclude every input from node_modules except from @plone/volto
+
       /node_modules\/(?!(@plone\/volto)\/)/.test(input) &&
-      // Storybook default exclusions
+
       /storybook-config-entry\.js$/.test(input) &&
       /storybook-stories\.js$/.test(input) &&
-      // If input is in an addon, DON'T exclude it
+
       !addonPaths.some((p) => input.includes(p));
 
       resultConfig.module.rules[13].include = [
         /preview\.jsx/,
         ...(Array.isArray(resultConfig.module.rules[13].include)
           ? resultConfig.module.rules[13].include
-          : [resultConfig.module.rules[13].include].filter(Boolean)), // Garante que seja um array para evitar erro de include não definido
+          : [resultConfig.module.rules[13].include].filter(Boolean)),
         ...addonPaths,
       ];
 
@@ -196,11 +188,6 @@ module.exports = {
         extender.modify(acc, { target: 'web', dev: 'dev' }, config),
       resultConfig,
     );
-
-    // Note: we don't actually support razzle plugins, which are also a feature
-    // of the razzle.extend.js addons file. Those features are probably
-    // provided in a different manner by Storybook plugins (for example scss
-    // loaders).
 
     return extendedConfig;
   },

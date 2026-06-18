@@ -1,0 +1,48 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const execute_1 = require("./execute");
+const exists_1 = require("./exists");
+const fetch_1 = require("./fetch");
+const offline_1 = require("./offline");
+const parse_1 = require("./parse");
+const tar_1 = require("./tar");
+/**
+ * Download the tar file from the repository
+ * and store it in a temporary directory
+ * @param repository The repository to download
+ *
+ * @example
+ * ```js
+ * // ..
+ * const path = await download('iwatakeshi/git-copy')
+ * // ...
+ * ```
+ */
+async function download(repository, options = {}) {
+    const info = parse_1.default(repository, options);
+    const file = tar_1.getFile(info, options);
+    const url = tar_1.getUrl(info, options);
+    const local = async () => exists_1.default(file);
+    const remote = async () => fetch_1.default(url, file);
+    let order = [local, remote];
+    if ((await offline_1.isOffline()) || options.cache) {
+        order = [local];
+    }
+    else if (options.force || info.type === 'master') {
+        order = [remote, local];
+    }
+    try {
+        const result = await execute_1.default(order);
+        if (typeof result === 'boolean') {
+            return file;
+        }
+        return result;
+    }
+    catch (error) {
+        if (options.throw) {
+            throw error;
+        }
+    }
+    return '';
+}
+exports.default = download;

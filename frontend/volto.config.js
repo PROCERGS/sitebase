@@ -1,24 +1,8 @@
 const addons = [
-  "@kitconcept/volto-light-theme",
   '@plone-collective/volto-authomatic',
-
-  '@eeacms/volto-accordion-block',
-  '@kitconcept/volto-button-block',
-  '@kitconcept/volto-heading-block',
-  '@kitconcept/volto-highlight-block',
-  '@kitconcept/volto-introduction-block',
-  '@kitconcept/volto-separator-block',
-  "@kitconcept/volto-dsgvo-banner",
-  "@kitconcept/volto-carousel-block", 
-
-  "volto-form-block",
-
-  "volto-site-componentes",
-  "volto-custom-light-theme",
-
-  'volto-procergs-sitebase'
+  'procergs-tema',
 ];
-const theme = '@kitconcept/volto-light-theme';
+const theme = 'procergs-tema';
 
 module.exports = {
   addons,

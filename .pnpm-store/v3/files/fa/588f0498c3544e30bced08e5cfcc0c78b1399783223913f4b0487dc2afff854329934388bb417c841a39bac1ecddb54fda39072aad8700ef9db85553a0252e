@@ -1,0 +1,42 @@
+"use strict";
+var _a, _b, _c, _d;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.GitlyDownloadError = exports.GitlyExtractError = exports.GitlyFetchError = exports.GitlyUknownError = exports.GitlyErrorType = void 0;
+var GitlyErrorType;
+(function (GitlyErrorType) {
+    GitlyErrorType["Fetch"] = "fetch";
+    GitlyErrorType["Extract"] = "extract";
+    GitlyErrorType["Download"] = "download";
+    GitlyErrorType["Unknown"] = "unknown";
+})(GitlyErrorType = exports.GitlyErrorType || (exports.GitlyErrorType = {}));
+class GitlyAbstractError extends Error {
+    constructor(message, code = -1) {
+        super(message);
+        this.message = message;
+        this.code = code;
+        this.rawMessage = message;
+        const type = this.type = this.ctor.type;
+        this.message = `[${type ? `gitly:${type}` : 'gitly'}]: ${message}`;
+        Object.setPrototypeOf(this, new.target.prototype);
+    }
+    get ctor() {
+        return (this.constructor);
+    }
+}
+exports.default = GitlyAbstractError;
+exports.GitlyUknownError = (_a = class extends GitlyAbstractError {
+    },
+    _a.type = GitlyErrorType.Unknown,
+    _a);
+exports.GitlyFetchError = (_b = class extends GitlyAbstractError {
+    },
+    _b.type = GitlyErrorType.Fetch,
+    _b);
+exports.GitlyExtractError = (_c = class extends GitlyAbstractError {
+    },
+    _c.type = GitlyErrorType.Extract,
+    _c);
+exports.GitlyDownloadError = (_d = class extends GitlyAbstractError {
+    },
+    _d.type = GitlyErrorType.Download,
+    _d);

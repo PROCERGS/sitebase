@@ -1,0 +1,8 @@
+import GitlyOptions from '../interfaces/options';
+/**
+ * Downloads and extracts the repository
+ * @param repository The repository to download
+ * @param destination The destination to extract
+ * @returns A tuple with the source and destination respectively
+ */
+export default function gitly(repository: string, destination: string, options: GitlyOptions): Promise<[string, string]>;

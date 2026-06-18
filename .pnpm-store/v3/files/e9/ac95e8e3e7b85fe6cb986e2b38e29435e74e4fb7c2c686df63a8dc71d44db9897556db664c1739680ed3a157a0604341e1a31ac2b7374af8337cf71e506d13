@@ -1,0 +1,15 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const download_1 = require("./download");
+const extract_1 = require("./extract");
+/**
+ * Downloads and extracts the repository
+ * @param repository The repository to download
+ * @param destination The destination to extract
+ * @returns A tuple with the source and destination respectively
+ */
+async function gitly(repository, destination, options) {
+    const source = await download_1.default(repository, options);
+    return [source, await extract_1.default(source, destination, options)];
+}
+exports.default = gitly;

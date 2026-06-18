@@ -23,7 +23,6 @@ PLONE_VERSION=6
 DOCKER_IMAGE=plone/server-dev:${PLONE_VERSION}
 DOCKER_IMAGE_ACCEPTANCE=plone/server-acceptance:${PLONE_VERSION}
 
-ADDON_NAME='volto-procergs-sitebase'
 IMAGE_NAME=ghcr.io/PROCERGS/sitebase-frontend
 IMAGE_TAG=latest
 VOLTO_VERSION = $(shell cat ./mrs.developer.json | python -c "import sys, json; print(json.load(sys.stdin)['core']['tag'])")
@@ -63,11 +62,12 @@ build-deps: core/packages/registry/dist core/packages/components/dist ## Build d
 
 .PHONY: i18n
 i18n: ## Sync i18n
-	pnpm --filter $(ADDON_NAME) i18n
+	VOLTOCONFIG=$(CURRENT_DIR)/volto.config.js pnpm --filter @plone/volto i18n
 
 .PHONY: ci-i18n
 ci-i18n: ## Check if i18n is not synced
-	pnpm --filter $(ADDON_NAME) i18n && git diff -G'^[^\"POT]' --exit-code
+	VOLTOCONFIG=$(CURRENT_DIR)/volto.config.js pnpm --filter @plone/volto i18n
+	git diff -G'^[^\"POT]' --exit-code
 
 .PHONY: format
 format: ## Format codebase

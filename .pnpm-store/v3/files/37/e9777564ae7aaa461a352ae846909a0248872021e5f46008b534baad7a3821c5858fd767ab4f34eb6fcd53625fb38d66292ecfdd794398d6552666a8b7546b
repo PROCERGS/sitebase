@@ -1,0 +1,14 @@
+import GitlyOptions from '../interfaces/options';
+/**
+ * Download the tar file from the repository
+ * and store it in a temporary directory
+ * @param repository The repository to download
+ *
+ * @example
+ * ```js
+ * // ..
+ * const path = await download('iwatakeshi/git-copy')
+ * // ...
+ * ```
+ */
+export default function download(repository: string, options?: GitlyOptions): Promise<string>;

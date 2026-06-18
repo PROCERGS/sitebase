@@ -1,7 +1,7 @@
 context('Example Acceptance Tests', () => {
   describe('Visit a page', () => {
     beforeEach(() => {
-      // Given a logged in editor
+
       cy.viewport('macbook-16');
       cy.createContent({
         contentType: 'Document',

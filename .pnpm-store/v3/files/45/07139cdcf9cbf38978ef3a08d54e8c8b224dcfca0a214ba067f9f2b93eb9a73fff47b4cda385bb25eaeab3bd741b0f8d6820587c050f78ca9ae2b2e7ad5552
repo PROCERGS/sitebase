@@ -1,0 +1,27 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.extract = exports.getFile = exports.getUrl = void 0;
+const os = require("os");
+const path_1 = require("path");
+const tar = require("tar");
+function getUrl(info, options = {}) {
+    const { path: repo, type } = info;
+    if (options.url && options.url.filter) {
+        return options.url.filter(info);
+    }
+    switch (info.hostname) {
+        case 'bitbucket':
+            return `https://bitbucket.org${repo}/get/${type}.tar.gz`;
+        case 'gitlab':
+            return `https://gitlab.com${repo}/repository/archive.tar.gz?ref=${type}`;
+        default:
+            return `https://github.com${repo}/archive/${type}.tar.gz`;
+    }
+}
+exports.getUrl = getUrl;
+function getFile(info, options = {}) {
+    const { path, type, hostname: site } = info;
+    return path_1.join(options.temp || path_1.join(os.homedir(), '.gitly'), site, path, `${type}.tar.gz`);
+}
+exports.getFile = getFile;
+exports.extract = tar.extract;

@@ -1,0 +1,90 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const fs_1 = require("fs");
+const path_1 = require("path");
+const shelljs_1 = require("shelljs");
+const download_1 = require("../download");
+const extract_1 = require("../extract");
+describe('utils/extract', () => {
+    const destination = path_1.join(__dirname, 'output', 'extract', 'example');
+    const options = {
+        temp: path_1.join(__dirname, 'output', 'extract', '.gitcopy'),
+    };
+    beforeEach(async () => {
+        shelljs_1.rm('-rf', path_1.join(__dirname, 'output', 'extract', '.gitcopy'));
+    });
+    afterEach(async () => {
+        shelljs_1.rm('-rf', destination);
+    });
+    afterAll(async () => {
+        shelljs_1.rm('-rf', path_1.join(__dirname, 'output', 'extract', '.gitcopy'));
+    });
+    it('should extract "lukeed/gittar"', async () => {
+        // tslint:disable-next-line: no-floating-promises
+        const path = await download_1.default('lukeed/gittar', options);
+        expect(path).toBeTruthy();
+        expect(fs_1.existsSync(path)).toBe(true);
+    });
+    it('should extract "lukeed/gittar#v0.1.1"', async () => {
+        // tslint:disable-next-line: no-floating-promises
+        const source = await download_1.default('lukeed/gittar#v0.1.1', options);
+        const path = await extract_1.default(source, destination, options);
+        expect(fs_1.existsSync(source)).toBe(true);
+        expect(source).toBeTruthy();
+        expect(fs_1.existsSync(path)).toBe(true);
+        expect(path).toBeTruthy();
+    });
+    it('should extract "https://github.com/lukeed/gittar"', async () => {
+        const source = await download_1.default('https://github.com/lukeed/gittar', options);
+        const path = await extract_1.default(source, destination, options);
+        expect(fs_1.existsSync(source)).toBe(true);
+        expect(source).toBeTruthy();
+        expect(fs_1.existsSync(path)).toBe(true);
+        expect(path).toBeTruthy();
+    });
+    it('should extract "https://github.com/lukeed/gittar#v0.1.1"', async () => {
+        const source = await download_1.default('https://github.com/lukeed/gittar#v0.1.1', options);
+        const path = await extract_1.default(source, destination, options);
+        expect(fs_1.existsSync(source)).toBe(true);
+        expect(source).toBeTruthy();
+        expect(fs_1.existsSync(path)).toBe(true);
+        expect(path).toBeTruthy();
+    });
+    it('should extract "github.com/lukeed/gittar"', async () => {
+        const source = await download_1.default('github.com/lukeed/gittar', options);
+        const path = await extract_1.default(source, destination, options);
+        expect(fs_1.existsSync(source)).toBe(true);
+        expect(source).toBeTruthy();
+        expect(fs_1.existsSync(path)).toBe(true);
+        expect(path).toBeTruthy();
+    });
+    it('should extract "github.com/lukeed/gittar#v0.1.1"', async () => {
+        const source = await download_1.default('github.com/lukeed/gittar#v0.1.1', options);
+        const path = await extract_1.default(source, destination, options);
+        expect(fs_1.existsSync(source)).toBe(true);
+        expect(source).toBeTruthy();
+        expect(fs_1.existsSync(path)).toBe(true);
+        expect(path).toBeTruthy();
+    });
+    it('should extract "github:lukeed/gittar"', async () => {
+        const source = await download_1.default('github:lukeed/gittar', options);
+        const path = await extract_1.default(source, destination, options);
+        expect(fs_1.existsSync(source)).toBe(true);
+        expect(source).toBeTruthy();
+        expect(fs_1.existsSync(path)).toBe(true);
+        expect(path).toBeTruthy();
+    });
+    it('should extract "github:lukeed/gittar#v0.1.1"', async () => {
+        const source = await download_1.default('github:lukeed/gittar#v0.1.1', options);
+        const path = await extract_1.default(source, destination, options);
+        expect(fs_1.existsSync(source)).toBe(true);
+        expect(source).toBeTruthy();
+        expect(fs_1.existsSync(path)).toBe(true);
+        expect(path).toBeTruthy();
+    });
+    it('should error and return an empty string when extraction fails', async () => {
+        const path = await extract_1.default(path_1.join(__dirname, 'dummy'), destination, options);
+        expect(fs_1.existsSync(path)).toBe(false);
+        expect(path).toBeFalsy();
+    });
+});

@@ -10,7 +10,6 @@ else if (fs.existsSync(`${projectRootPath}/../../core`))
 
 const { registry } = AddonRegistry.init(`${coreLocation}/packages/volto`);
 
-// Extends ESlint configuration for adding the aliases to `src` directories in Volto addons
 const addonAliases = Object.keys(registry.packages).map((o) => [
   o,
   registry.packages[o].modulePath,
@@ -28,10 +27,6 @@ module.exports = {
           ['@plone/volto', `${coreLocation}/packages/volto/src`],
           ['@plone/volto-slate', `${coreLocation}/packages/volto-slate/src`],
           ['@plone/registry', `${coreLocation}/packages/registry/src`],
-          [
-            'volto-procergs-sitebase',
-            './packages/volto-procergs-sitebase/src',
-          ],
           ...addonAliases,
         ],
         extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],

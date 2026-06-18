@@ -1,0 +1,24 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const axios_1 = require("axios");
+const stream = require("stream");
+const util_1 = require("util");
+const error_1 = require("./error");
+const write_1 = require("./write");
+const pipeline = util_1.promisify(stream.pipeline);
+async function fetch(url, file) {
+    const response = await axios_1.default.get(url, {
+        responseType: 'stream',
+        validateStatus: (status) => status >= 200 && status < 500,
+    });
+    const { statusText: message, status: code } = response;
+    if (code >= 400)
+        throw new error_1.GitlyDownloadError(message, code);
+    else if (code >= 300 && code < 400) {
+        return fetch(response.headers.location, file);
+    }
+    else
+        await pipeline(response.data, await write_1.default(file));
+    return file;
+}
+exports.default = fetch;

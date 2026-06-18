@@ -1,0 +1,10 @@
+{
+  "name": "jest-file",
+  "version": "1.0.0",
+  "description": "file transform for jest",
+  "repository": "gutenye/jest-file",
+  "author": "Guten Ye <ywzhaifei@gmail.com>",
+  "main": "index.js",
+  "license": "MIT",
+  "keywords": ["jest", "jest-transform"]
+}

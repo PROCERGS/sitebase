@@ -82,7 +82,7 @@ function install_addons() {
 	echo "Installing Plone addons..."
 	# for each addon do below
 	cd ./frontend
-	sed -i 's|const theme = '\'''\'';|const theme = "@kitconcept/volto-light-theme";|g' volto.config.js
+	sed -i 's|const theme = '\'''\'';|const theme = "procergs-tema";|g' volto.config.js
 	# end foreach
 }
 

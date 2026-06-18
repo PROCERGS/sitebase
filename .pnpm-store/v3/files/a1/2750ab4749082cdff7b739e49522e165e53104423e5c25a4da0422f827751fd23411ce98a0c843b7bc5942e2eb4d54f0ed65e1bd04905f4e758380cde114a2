@@ -1,0 +1,10 @@
+import GitlyOptions from '../interfaces/options';
+declare const _default: (source: string, destination: string, options?: GitlyOptions) => Promise<string>;
+/**
+ * Extract a zipped file to the specified destination
+ * @param source The source zipped file
+ * @param destination The path to extract the zipped file
+ * @param options
+ *
+ */
+export default _default;

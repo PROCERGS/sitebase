@@ -1,0 +1,2 @@
+import GitlyOptions from '../interfaces/options';
+export default function exists(path: string, options?: GitlyOptions): Promise<boolean>;

@@ -1,5 +1,8 @@
 !.vscode
-node_modules
+
+# Dependencies
+node_modules/
+**/node_modules/
 /core
 /public
 *.mo
