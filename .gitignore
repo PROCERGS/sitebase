@@ -6,3 +6,11 @@ node_modules
 *.mo
 /.idea
 .vscode/
+
+AGENTS.md
+
+frontend/packages/*
+!frontend/packages/volto-procergs-sitebase
+
+backend/.mxdev_cache/
+backend/.venv/

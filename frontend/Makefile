@@ -10,6 +10,9 @@ MAKEFLAGS+=--no-builtin-rules
 
 CURRENT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
+# Load root-level frontend customization values when running directly from ./frontend.
+-include $(CURRENT_DIR)/../.env
+
 # Recipe snippets for reuse
 
 # We like colors
@@ -28,11 +31,19 @@ IMAGE_NAME=ghcr.io/PROCERGS/sitebase-frontend
 IMAGE_TAG=latest
 VOLTO_VERSION = $(shell cat ./mrs.developer.json | python -c "import sys, json; print(json.load(sys.stdin)['core']['tag'])")
 
-# Extra packages/addons to inject before pnpm install.
-# Passed from the root Makefile via .env (FRONTEND_ADD_PACKAGES / FRONTEND_ADD_ADDONS / FRONTEND_ADD_MRSDEVELOPER).
-ADD_PACKAGES ?=
-ADD_ADDONS ?=
-ADD_MRSDEVELOPER ?=
+# Frontend-prefixed customization variables as defined in ../.env.
+FRONTEND_ADD_PACKAGES ?=
+FRONTEND_ADD_ADDONS ?=
+FRONTEND_SET_THEME ?=
+FRONTEND_ADD_MRSDEVELOPER ?=
+FRONTEND_ADD_PNPM_WORKSPACE ?=
+
+# Effective variables consumed by scripts. These can still be overridden directly as ADD_*.
+ADD_PACKAGES ?= $(FRONTEND_ADD_PACKAGES)
+ADD_ADDONS ?= $(FRONTEND_ADD_ADDONS)
+SET_THEME ?= $(FRONTEND_SET_THEME)
+ADD_MRSDEVELOPER ?= $(FRONTEND_ADD_MRSDEVELOPER)
+ADD_PNPM_WORKSPACE ?= $(FRONTEND_ADD_PNPM_WORKSPACE)
 
 .PHONY: help
 help: ## Show this help
@@ -54,9 +65,17 @@ install: ## Installs the add-on in a development environment
 		echo "$(GREEN)==> Registering extra Volto addons$(RESET)"
 		bash $(CURRENT_DIR)/scripts/add_addons.sh "$(ADD_ADDONS)"
 	fi
+	if [ -n "$(SET_THEME)" ]; then
+		echo "$(GREEN)==> Setting Volto theme$(RESET)"
+		bash $(CURRENT_DIR)/scripts/set_theme.sh "$(SET_THEME)"
+	fi
 	if [ -n "$(ADD_MRSDEVELOPER)" ]; then
 		echo "$(GREEN)==> Merging mrs-developer entries$(RESET)"
-		bash $(CURRENT_DIR)/scripts/add_mrsdeveloper.sh "$(ADD_MRSDEVELOPER)"
+		bash $(CURRENT_DIR)/scripts/add_mrsdeveloper.sh '$(ADD_MRSDEVELOPER)'
+	fi
+	if [ -n "$(ADD_PNPM_WORKSPACE)" ]; then
+		echo "$(GREEN)==> Extending pnpm workspace$(RESET)"
+		bash $(CURRENT_DIR)/scripts/add_pnpm_workspace.sh "$(ADD_PNPM_WORKSPACE)"
 	fi
 	pnpm dlx mrs-developer missdev --no-config --fetch-https
 	pnpm i
