@@ -36,8 +36,20 @@ PYTHON
     bash /app/scripts/add_pnpm_workspace.sh "${ADD_PNPM_WORKSPACE}"
     pnpm dlx mrs-developer missdev --no-config --fetch-https
     pnpm install && pnpm build:deps
+    
     pnpm build
-    pnpm install --prod
+
+    # Remove test-only workspace package before production reinstall.
+    # This package pulls @testing-library/jest-dom -> vitest peer, and cypress.
+    rm -rf core/packages/volto-testing
+
+    # pnpm prune is not reliable enough for monorepos; recreate node_modules instead.
+    rm -rf node_modules
+
+    pnpm install --prod --filter . --frozen-lockfile --config.confirmModulesPurge=false
+
+    pnpm store prune
+
     rm -rf node_modules/.pnpm/babel-traverse@6.26.0 \
            node_modules/.pnpm/babel-plugin-transform-class-properties@6.24.1 \
            node_modules/.pnpm/babel-helper-function-name@6.24.1 \
