@@ -42,5 +42,3 @@ RUN <<EOT
     chgrp -R 0 /app
     chmod -R g=u /app
 EOT
-
-ENTRYPOINT ["/app/scripts/sitebase-entrypoint.sh"]
