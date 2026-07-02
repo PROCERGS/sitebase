@@ -19,11 +19,12 @@ node -e "
 const fs = require('fs');
 const theme = process.env._THEME_NAME;
 let content = fs.readFileSync('volto.config.js', 'utf8');
-const updated = content.replace(/^const theme = .*;$/m, \`const theme = '\${theme}';\`);
-if (updated === content) {
+const pattern = /^const theme = .*;$/m;
+if (!pattern.test(content)) {
     console.error('set_theme.sh: could not find theme line in volto.config.js');
     process.exit(1);
 }
+const updated = content.replace(pattern, \`const theme = '\${theme}';\`);
 fs.writeFileSync('volto.config.js', updated);
 console.log('  theme: ' + theme);
 "
