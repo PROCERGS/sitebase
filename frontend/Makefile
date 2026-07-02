@@ -55,8 +55,8 @@ clean: ## Clean environment
 	@echo "$(RED)==> Cleaning Volto core and node_modules$(RESET)"
 	rm -rf core node_modules
 
-.PHONY: install
-install: ## Installs the add-on in a development environment
+.PHONY: prepare
+prepare: ## Patch config files for a site-specific addon build (package.json, volto.config.js, mrs.developer.json, pnpm-workspace.yaml). Run before install.
 	if [ -n "$(ADD_PACKAGES)" ]; then
 		echo "$(GREEN)==> Injecting extra frontend packages$(RESET)"
 		bash $(CURRENT_DIR)/scripts/add_packages.sh "$(ADD_PACKAGES)"
@@ -77,6 +77,9 @@ install: ## Installs the add-on in a development environment
 		echo "$(GREEN)==> Extending pnpm workspace$(RESET)"
 		bash $(CURRENT_DIR)/scripts/add_pnpm_workspace.sh "$(ADD_PNPM_WORKSPACE)"
 	fi
+
+.PHONY: install
+install: ## Installs the add-on in a development environment
 	pnpm dlx mrs-developer missdev --no-config --fetch-https
 	pnpm i
 	make build-deps

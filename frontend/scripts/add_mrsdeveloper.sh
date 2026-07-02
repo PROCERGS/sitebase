@@ -17,24 +17,21 @@ fi
 echo "add_mrsdeveloper.sh: merging entries into mrs.developer.json"
 
 export _MRS_NEW_ENTRIES="$ADD_MRSDEVELOPER"
-python3 << 'PYEOF'
-import json, os, sys
+node << 'NODEEOF'
+const fs = require('fs');
 
-try:
-    new_entries = json.loads(os.environ['_MRS_NEW_ENTRIES'])
-except json.JSONDecodeError as e:
-    print(f'add_mrsdeveloper.sh: invalid JSON — {e}', file=sys.stderr)
-    sys.exit(1)
+let newEntries;
+try {
+    newEntries = JSON.parse(process.env._MRS_NEW_ENTRIES);
+} catch (e) {
+    console.error(`add_mrsdeveloper.sh: invalid JSON — ${e.message}`);
+    process.exit(1);
+}
 
-with open('mrs.developer.json') as f:
-    data = json.load(f)
-
-data.update(new_entries)
-
-with open('mrs.developer.json', 'w') as f:
-    json.dump(data, f, indent=2)
-
-print(f'  merged: {list(new_entries.keys())}')
-PYEOF
+const data = JSON.parse(fs.readFileSync('mrs.developer.json', 'utf8'));
+Object.assign(data, newEntries);
+fs.writeFileSync('mrs.developer.json', JSON.stringify(data, null, 2) + '\n');
+console.log(`  merged: ${Object.keys(newEntries).join(', ')}`);
+NODEEOF
 
 echo "add_mrsdeveloper.sh: done."

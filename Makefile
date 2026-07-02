@@ -50,16 +50,20 @@ help: ## This help message
 ###########################################
 # Frontend
 ###########################################
-.PHONY: frontend-install
-frontend-install:  ## Install React Frontend
+.PHONY: frontend-prepare
+frontend-prepare:  ## Prepare frontend for site-specific addon build (patches config files, no install)
 	# ADD_MRSDEVELOPER is single-quoted because its value is JSON containing double quotes.
 	# The other variables are simple comma-separated strings, so double quotes are fine.
-	$(MAKE) -C "./frontend/" install \
+	$(MAKE) -C "./frontend/" prepare \
 		ADD_PACKAGES="$(FRONTEND_ADD_PACKAGES)" \
 		ADD_ADDONS="$(FRONTEND_ADD_ADDONS)" \
 		SET_THEME="$(FRONTEND_SET_THEME)" \
 		ADD_MRSDEVELOPER='$(FRONTEND_ADD_MRSDEVELOPER)' \
 		ADD_PNPM_WORKSPACE="$(FRONTEND_ADD_PNPM_WORKSPACE)"
+
+.PHONY: frontend-install
+frontend-install:  ## Install React Frontend
+	$(MAKE) -C "./frontend/" install
 
 .PHONY: frontend-build
 frontend-build:  ## Build React Frontend

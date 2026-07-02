@@ -16,53 +16,39 @@ fi
 
 echo "add_packages.sh: injecting packages into package.json"
 
-echo "$ADD_PACKAGES" | tr ',' '\n' | while IFS= read -r pkg; do
-    pkg="$(echo "$pkg" | xargs)"  # trim whitespace
-    [ -z "$pkg" ] && continue
+export _ADD_PACKAGES="$ADD_PACKAGES"
+node << 'NODEEOF'
+const fs = require('fs');
 
-    # Parse name and version, handling scoped packages (@scope/name@version)
-    if [[ "$pkg" =~ ^(@[^@]+)@(.+)$ ]]; then
-        name="${BASH_REMATCH[1]}"
-        version="${BASH_REMATCH[2]}"
-    elif [[ "$pkg" =~ ^([^@]+)@(.+)$ ]]; then
-        name="${BASH_REMATCH[1]}"
-        version="${BASH_REMATCH[2]}"
-    else
-        name="$pkg"
-        version=""
-    fi
+const pkgs = process.env._ADD_PACKAGES.split(',').map(p => p.trim()).filter(Boolean);
+const data = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+const deps = data.dependencies || (data.dependencies = {});
 
-    if [ -n "$version" ]; then
-        echo "  + ${name}@${version}"
-    else
-        echo "  + ${name} (no version provided)"
-    fi
+for (const pkg of pkgs) {
+    let name, version;
+    if (pkg.startsWith('@')) {
+        // Scoped package: @scope/name@version — skip the leading @ when looking for @version
+        const at = pkg.indexOf('@', 1);
+        name = at === -1 ? pkg : pkg.slice(0, at);
+        version = at === -1 ? '' : pkg.slice(at + 1);
+    } else {
+        const at = pkg.indexOf('@');
+        name = at === -1 ? pkg : pkg.slice(0, at);
+        version = at === -1 ? '' : pkg.slice(at + 1);
+    }
 
-    export _PKG_NAME="$name"
-    export _PKG_VERSION="$version"
-    python3 << 'PYEOF'
-import json
-import os
+    if (version) {
+        console.log(`  + ${name}@${version}`);
+        deps[name] = version;
+    } else if (name in deps && deps[name]) {
+        console.log(`  keeping existing version for ${name}: ${deps[name]}`);
+    } else {
+        console.log(`  + ${name} (no version, using *)`);
+        deps[name] = '*';
+    }
+}
 
-name = os.environ['_PKG_NAME']
-version = os.environ['_PKG_VERSION']
-
-with open('package.json') as f:
-    data = json.load(f)
-
-deps = data.setdefault('dependencies', {})
-if version:
-    deps[name] = version
-    print(f'    set {name} -> {version}')
-elif name in deps and deps[name]:
-    print(f'    keeping existing version for {name}: {deps[name]}')
-else:
-    deps[name] = '*'
-    print(f'    set {name} -> *')
-
-with open('package.json', 'w') as f:
-    json.dump(data, f, indent=2)
-PYEOF
-done
+fs.writeFileSync('package.json', JSON.stringify(data, null, 2) + '\n');
+NODEEOF
 
 echo "add_packages.sh: done."
