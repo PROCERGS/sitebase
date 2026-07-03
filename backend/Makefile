@@ -8,6 +8,9 @@ SHELL:=bash
 MAKEFLAGS+=--warn-undefined-variables
 MAKEFLAGS+=--no-builtin-rules
 
+# Load root-level customization values when running directly from ./backend.
+-include $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))/../.env
+
 # We like colors
 # From: https://coderwall.com/p/izxssa/colored-makefile-for-golang-projects
 RED=`tput setaf 1`
@@ -18,9 +21,11 @@ YELLOW=`tput setaf 3`
 IMAGE_NAME_PREFIX=ghcr.io/procergs/sitebase
 IMAGE_TAG=latest
 
-# Extra Python packages to install after the main mxdev install.
-# Passed from the root Makefile via .env (BACKEND_ADD_PACKAGES).
-ADD_PACKAGES ?=
+# Backend-prefixed customization variable as defined in ../.env.
+BACKEND_ADD_PACKAGES ?=
+
+# Effective variable consumed by scripts. Can still be overridden directly as ADD_PACKAGES.
+ADD_PACKAGES ?= $(BACKEND_ADD_PACKAGES)
 
 # Python checks
 UV?=uv
@@ -72,12 +77,17 @@ instance/etc/zope.ini instance/etc/zope.conf: instance.yaml ## Create instance c
 .PHONY: config
 config: instance/etc/zope.ini
 
-.PHONY: install
-install: $(VENV_FOLDER) config ## Install Plone and dependencies
+.PHONY: prepare
+prepare: $(VENV_FOLDER) ## Install site-specific extra packages into the venv (run after install)
 	if [ -n "$(ADD_PACKAGES)" ]; then
 		echo "$(GREEN)==> Installing extra backend packages$(RESET)"
 		bash $(BACKEND_FOLDER)/scripts/add_packages.sh "$(UV)" "$(ADD_PACKAGES)"
+	else
+		echo "add_packages.sh: ADD_PACKAGES is empty, nothing to do."
 	fi
+
+.PHONY: install
+install: $(VENV_FOLDER) config ## Install Plone and dependencies
 
 .PHONY: clean
 clean: ## Clean installation and instance

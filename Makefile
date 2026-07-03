@@ -81,10 +81,14 @@ frontend-test:  ## Test frontend codebase
 ###########################################
 # Backend
 ###########################################
+.PHONY: backend-prepare
+backend-prepare:  ## Prepare backend: install site-specific packages into venv (run after backend-install)
+	$(MAKE) -C "./backend/" prepare \
+		ADD_PACKAGES="$(BACKEND_ADD_PACKAGES)"
+
 .PHONY: backend-install
 backend-install:  ## Create virtualenv and install Plone
-	$(MAKE) -C "./backend/" install \
-		ADD_PACKAGES="$(BACKEND_ADD_PACKAGES)"
+	$(MAKE) -C "./backend/" install
 	$(MAKE) backend-create-site
 
 .PHONY: backend-build
@@ -111,6 +115,12 @@ backend-test:  ## Test backend codebase
 ###########################################
 # Environment
 ###########################################
+.PHONY: prepare
+prepare:  ## Prepare backend and frontend for a site-specific addon build (run after install)
+	@echo "Prepare Backend & Frontend"
+	$(MAKE) backend-prepare
+	$(MAKE) frontend-prepare
+
 .PHONY: install
 install:  ## Install
 	@echo "Install Backend & Frontend"
