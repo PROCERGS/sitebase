@@ -35,7 +35,7 @@ PYTHON
     bash /app/scripts/add_mrsdeveloper.sh "${ADD_MRSDEVELOPER}"
     bash /app/scripts/add_pnpm_workspace.sh "${ADD_PNPM_WORKSPACE}"
     pnpm dlx mrs-developer missdev --no-config --fetch-https
-    pnpm install && pnpm build:deps
+    pnpm install
     
     pnpm build
 
