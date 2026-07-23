@@ -72,10 +72,3 @@ LABEL maintainer="PROCERGS <sites@procergs.rs.gov.br>" \
       org.label-schema.vendor="PROCERGS"
 
 COPY --from=builder /app/ /app/
-
-RUN <<EOT
-    set -e
-    npm i -g corepack@latest && corepack enable pnpm
-    corepack use pnpm@9.1.1
-    corepack prepare pnpm@9.1.1 --activate
-EOT

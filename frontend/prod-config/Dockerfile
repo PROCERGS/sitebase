@@ -20,11 +20,6 @@ RUN <<EOT
     chown -R node:node /app
 EOT
 
-# Update npm to a version whose bundled tar and glob dependencies are patched.
-ARG NPM_VERSION=11.18.0
-RUN npm install --global "npm@${NPM_VERSION}" && \
-    npm cache clean --force
-
 # Install and enable corepack for pnpm (official Plone requirement)
 RUN npm i -g corepack@latest && corepack enable
 
@@ -34,10 +29,8 @@ USER node
 # Set working directory to /app
 WORKDIR /app
 
-# Pre-download a pnpm release whose bundled tar and glob are patched.
-ARG PNPM_VERSION=10.34.5
-RUN corepack install --global "pnpm@${PNPM_VERSION}" && \
-    pnpm --version
+# Setup pnpm@9 (official Plone configuration)
+RUN corepack use pnpm@9
 
 # Expose default Express port
 EXPOSE 3000
