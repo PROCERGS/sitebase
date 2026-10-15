@@ -16,6 +16,10 @@ GIT_FOLDER=$(CURRENT_DIR)/.git
 # The same .env is also read automatically by docker compose.
 -include $(CURRENT_DIR)/.env
 
+# Pass the optional profile from .env to frontend commands and recursive make.
+PROJECT_ID ?=
+export PROJECT_ID
+
 PROJECT_NAME=sitebase
 STACK_NAME=sitebase-example-com
 
@@ -228,7 +232,7 @@ acceptance-test:
 .PHONY: acceptance-frontend-image-build
 acceptance-frontend-image-build:
 	@echo "Build acceptance frontend image"
-	@docker build frontend -t PROCERGS/sitebase-frontend:acceptance -f frontend/Dockerfile --build-arg VOLTO_VERSION=$(VOLTO_VERSION)
+	@docker build frontend -t PROCERGS/sitebase-frontend:acceptance -f frontend/Dockerfile --build-arg VOLTO_VERSION=$(VOLTO_VERSION) --build-arg PROJECT_ID
 
 .PHONY: acceptance-backend-image-build
 acceptance-backend-image-build:
