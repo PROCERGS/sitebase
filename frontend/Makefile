@@ -13,6 +13,10 @@ CURRENT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 # Load root-level frontend customization values when running directly from ./frontend.
 -include $(CURRENT_DIR)/../.env
 
+# Pass the optional profile from .env to frontend commands and recursive make.
+PROJECT_ID ?=
+export PROJECT_ID
+
 # Recipe snippets for reuse
 
 # We like colors
@@ -183,4 +187,4 @@ ci-acceptance-test: ## Run cypress tests in headless mode for CI
 
 .PHONY: build-image
 build-image:  ## Build Docker Image
-	@DOCKER_BUILDKIT=1 docker build . -t $(IMAGE_NAME):$(IMAGE_TAG) -f Dockerfile --build-arg VOLTO_VERSION=$(VOLTO_VERSION)
+	@DOCKER_BUILDKIT=1 docker build . -t $(IMAGE_NAME):$(IMAGE_TAG) -f Dockerfile --build-arg VOLTO_VERSION=$(VOLTO_VERSION) --build-arg PROJECT_ID

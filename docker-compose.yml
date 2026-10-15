@@ -56,6 +56,7 @@ services:
       context: ./frontend
       args:
         - VOLTO_VERSION=${VOLTO_VERSION}
+        - PROJECT_ID=${PROJECT_ID:-}
         - PROD_CONFIG_IMAGE=${FRONTEND_PROD_CONFIG_IMAGE:-plone/frontend-prod-config:18.23.0}
         - ADD_PACKAGES=${FRONTEND_ADD_PACKAGES}
         - ADD_ADDONS=${FRONTEND_ADD_ADDONS}
