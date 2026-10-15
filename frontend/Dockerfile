@@ -10,6 +10,8 @@ COPY --chown=node package.json /app/package.json.temp
 COPY --chown=node mrs.developer.json /app/
 COPY --chown=node pnpm-workspace.yaml /app/
 
+# Project selection is used only while compiling the frontend.
+ARG PROJECT_ID=""
 ARG ADD_PACKAGES=""
 ARG ADD_ADDONS=""
 ARG SET_THEME=""
@@ -34,7 +36,26 @@ PYTHON
     bash /app/scripts/set_theme.sh "${SET_THEME}"
     bash /app/scripts/add_mrsdeveloper.sh "${ADD_MRSDEVELOPER}"
     bash /app/scripts/add_pnpm_workspace.sh "${ADD_PNPM_WORKSPACE}"
-    pnpm dlx mrs-developer missdev --no-config --fetch-https
+EOT
+
+# Mount GitHub credentials only while fetching addon sources, before install/build.
+RUN --mount=type=cache,id=pnpm,target=/app/.pnpm-store,uid=1000 \
+    --mount=type=secret,id=github_token,uid=1000 <<EOT
+    set -eu
+    if [ -s /run/secrets/github_token ]; then
+        # Reset inherited helpers and provide credentials only for HTTPS GitHub.
+        # Environment config avoids writing the token to Git config or clone URLs.
+        export GIT_CONFIG_COUNT=2
+        export GIT_CONFIG_KEY_0=credential.https://github.com.helper
+        export GIT_CONFIG_VALUE_0=''
+        export GIT_CONFIG_KEY_1=credential.https://github.com.helper
+        export GIT_CONFIG_VALUE_1='!f() { if [ "$1" = get ]; then printf "username=x-access-token\npassword=%s\n" "$(cat /run/secrets/github_token)"; fi; }; f'
+    fi
+    GIT_TERMINAL_PROMPT=0 pnpm dlx mrs-developer missdev --no-config --fetch-https
+EOT
+
+RUN --mount=type=cache,id=pnpm,target=/app/.pnpm-store,uid=1000 <<EOT
+    set -e
     pnpm install
     
     pnpm build
