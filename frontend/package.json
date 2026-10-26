@@ -84,8 +84,8 @@
       "simple-git@^3": ">=3.32.3",
       "proxy-addr": "2.0.8",
       "esbuild": "0.28.2",
-      "storybook": "8.6.19",
-      "@storybook/test": "8.6.19"
+      "storybook": "^8.6.19",
+      "@storybook/test": "^8.6.19"
     }
   },
   "packageManager": "pnpm@9.1.1"
