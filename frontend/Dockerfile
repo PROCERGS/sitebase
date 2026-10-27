@@ -24,10 +24,13 @@ import json
 orig_data = json.load(open('package.json.temp'))
 orig_deps = orig_data['dependencies']
 orig_pnpm = orig_data.get('pnpm', {})
+orig_package_manager = orig_data.get('packageManager')
 data = json.load(open('package.json'))
 data['dependencies'].update(orig_deps)
 if orig_pnpm:
     data['pnpm'] = orig_pnpm
+if orig_package_manager:
+    data['packageManager'] = orig_package_manager
 json.dump(data, open('package.json', 'w'), indent=2)
 PYTHON
     rm package.json.temp
