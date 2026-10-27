@@ -17,6 +17,7 @@ overrides:
   form-data@^3: '>=3.0.4'
   form-data@^4: '>=4.0.4'
   request>form-data: '>=2.5.4'
+  superagent>form-data: 4.0.5
   shell-quote: '>=1.7.3'
   shell-quote@^1: '>=1.7.3'
   basic-ftp: '>=5.2.0'
@@ -5704,7 +5705,7 @@ packages:
     resolution: {integrity: sha512-htCUDlxyyCLMgaM3xXg0C0LW2xqfuQ6p05pCEIsXuyQ+a1koYKTuBMzRNwmybfLgvJDMd0r1LTn4+E0Ti6C2AA==}
 
   asynckit@0.4.0:
-    resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
+    resolution: {integrity: sha1-x57Zf380y48robyXkLzDZkdLS3k=}
 
   at-least-node@1.0.0:
     resolution: {integrity: sha512-+q/t7Ekv1EDY2l6Gda6LLiX14rU9TV20Wa3ofeQmwPFZbOMo9DXrLbOjFaaclkXKWidIaopwAObQDqwWtGUjqg==}
@@ -6427,7 +6428,7 @@ packages:
     engines: {node: '>=0.1.90'}
 
   combined-stream@1.0.8:
-    resolution: {integrity: sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==}
+    resolution: {integrity: sha1-w9RaizT9cwYxoRCoolIGgrMdWn8=}
     engines: {node: '>= 0.8'}
 
   commander@10.0.1:
@@ -7078,7 +7079,7 @@ packages:
     engines: {node: '>= 14'}
 
   delayed-stream@1.0.0:
-    resolution: {integrity: sha512-ZySD7Nf91aLB0RxL4KGrKHBXl7Eds1DAmEdcoVawXnLD7SDhpNgtuII2aAkg7a7QS41jxPSZ17p4VdGnMHk3MQ==}
+    resolution: {integrity: sha1-3zrhmayt+31ECqrgsp4icrJOxhk=}
     engines: {node: '>=0.4.0'}
 
   delegates@1.0.0:
@@ -7402,7 +7403,7 @@ packages:
     engines: {node: '>= 0.4'}
 
   es-set-tostringtag@2.1.0:
-    resolution: {integrity: sha512-j6vWzfrGVfyXxge+O0x5sh6cvxAog0a/4Rdd2K36zCMV5eJ+/+tOAngRO8cODMNWbVRdVlmGZQL2YS3yR8bIUA==}
+    resolution: {integrity: sha1-8x274MGDsAptJutjJcgQwP0YvU0=}
     engines: {node: '>= 0.4'}
 
   es-shim-unscopables@1.1.0:
@@ -8032,7 +8033,7 @@ packages:
     engines: {node: '>= 6'}
 
   form-data@4.0.5:
-    resolution: {integrity: sha512-8RipRLol37bNs2bhoV67fiTEvdTrbMUYcFTiy3+wuuOnUog2QBHCZWXDRijWQfAkhBj2Uf5UnVaiWwA5vdd82w==}
+    resolution: {integrity: sha1-tJ5IhYBF/0y/awPhgFzrytNnkFM=}
     engines: {node: '>= 6'}
 
   formdata-polyfill@4.0.10:
@@ -30273,7 +30274,7 @@ snapshots:
       cookiejar: 2.1.4
       debug: 3.2.7(supports-color@8.1.1)
       extend: 3.0.2
-      form-data: 4.0.2
+      form-data: 4.0.5
       formidable: 1.2.6
       methods: 1.1.2
       mime: 1.6.0

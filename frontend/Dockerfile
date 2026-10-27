@@ -80,10 +80,6 @@ RUN --mount=type=cache,id=pnpm,target=/app/.pnpm-store,uid=1000 <<EOT
            node_modules/.pnpm/babel-template@6.26.0 \
            node_modules/.pnpm/babel-types@6.26.0 \
            node_modules/.pnpm/babel-runtime@6.26.0
-    rm -rf node_modules/.pnpm/form-data@2.3.3 \
-           node_modules/.pnpm/form-data@2.5.3 \
-           node_modules/.pnpm/form-data@3.0.3 \
-           node_modules/.pnpm/form-data@4.0.3
     rm -rf node_modules/.pnpm/simple-git@3.28.0
     rm -rf node_modules/.pnpm/basic-ftp@5.0.5
 EOT
