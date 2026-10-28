@@ -73,15 +73,6 @@ RUN --mount=type=cache,id=pnpm,target=/app/.pnpm-store,uid=1000 <<EOT
     pnpm install --prod --filter . --frozen-lockfile --config.confirmModulesPurge=false
 
     pnpm store prune
-
-    rm -rf node_modules/.pnpm/babel-traverse@6.26.0 \
-           node_modules/.pnpm/babel-plugin-transform-class-properties@6.24.1 \
-           node_modules/.pnpm/babel-helper-function-name@6.24.1 \
-           node_modules/.pnpm/babel-template@6.26.0 \
-           node_modules/.pnpm/babel-types@6.26.0 \
-           node_modules/.pnpm/babel-runtime@6.26.0
-    rm -rf node_modules/.pnpm/simple-git@3.28.0
-    rm -rf node_modules/.pnpm/basic-ftp@5.0.5
 EOT
 
 FROM ${PROD_CONFIG_IMAGE}
