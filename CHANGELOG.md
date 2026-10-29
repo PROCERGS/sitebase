@@ -1,5 +1,15 @@
 # Changes
 
+## 1.3.4 (2026-10-29)
+
+### Changed
+- Update backend dependencies
+- Upgrade the frontend package manager from `pnpm` 9.1.1 to 10.34.5.
+- Upgrade frontend dependencies
+
+### Fixed
+- Preserve the `packageManager` field when merging frontend package metadata during the Docker build.
+
 ## 1.3.1 (2026-09-08)
 ### Fixed
  - Atualiza versões de ``plone.app.portlets`` para 6.0.4 e ``plone.app.event`` para 5.2.4 no ``mx.ini``.
