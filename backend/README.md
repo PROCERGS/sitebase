@@ -48,6 +48,28 @@ make create-site
     make install
     ```
 
+### Optional Datadog tracing
+
+The backend includes an opt-in WSGI integration for Datadog. Tracing is disabled
+unless `DD_TRACE_ENABLED` is explicitly set to `true`, `1`, `yes`, or `on`.
+Sites that do not define this variable continue to run without Datadog
+instrumentation.
+
+To enable tracing, configure the Datadog environment variables outside this
+public repository, for example through the deployment environment:
+
+```shell
+DD_TRACE_ENABLED=true
+DD_SERVICE=sitebase-backend
+DD_ENV=development
+DD_VERSION=your-image-version
+DD_AGENT_HOST=datadog-agent
+```
+
+The generated Zope Paste configuration always contains the optional filter.
+The filter returns the original WSGI application while tracing is disabled, so
+the same backend image can be used by sites with or without Datadog.
+
 
 ### Add features using `plonecli` or `bobtemplates.plone`
 

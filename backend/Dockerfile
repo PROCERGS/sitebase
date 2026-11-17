@@ -21,6 +21,7 @@ RUN <<EOT
     ../bin/mxdev -c mx.ini
     ../bin/uv pip install -r requirements-mxdev.txt
     bash /app/scripts/add_packages.sh "../bin/uv" "${ADD_PACKAGES}"
+    ../bin/python /app/scripts/configure_zope_ini.py /app/etc/zope.ini
     ../bin/python /compile_mo.py
 EOT
 

@@ -75,7 +75,8 @@ instance/etc/zope.ini instance/etc/zope.conf: instance.yaml ## Create instance c
 	@uvx cookiecutter -f --no-input -c 2.1.1 --config-file instance.yaml gh:plone/cookiecutter-zope-instance
 
 .PHONY: config
-config: instance/etc/zope.ini
+config: $(VENV_FOLDER) instance/etc/zope.ini
+	@$(BIN_FOLDER)/python $(BACKEND_FOLDER)/scripts/configure_zope_ini.py $(BACKEND_FOLDER)/instance/etc/zope.ini
 
 .PHONY: prepare
 prepare: $(VENV_FOLDER) ## Install site-specific extra packages into the venv (run after install)
@@ -100,15 +101,15 @@ remove-data: ## Remove all content
 	rm -rf $(VENV_FOLDER) instance/var
 
 .PHONY: start
-start: $(VENV_FOLDER) instance/etc/zope.ini ## Start a Plone instance on localhost:8080
+start: config ## Start a Plone instance on localhost:8080
 	@uv run runwsgi instance/etc/zope.ini
 
 .PHONY: console
-console: $(VENV_FOLDER) instance/etc/zope.ini ## Start a console into a Plone instance
+console: config ## Start a console into a Plone instance
 	@uv run zconsole debug instance/etc/zope.conf
 
 .PHONY: create-site
-create-site: $(VENV_FOLDER) instance/etc/zope.ini ## Create a new site from scratch
+create-site: config ## Create a new site from scratch
 	@uv run zconsole run instance/etc/zope.conf ./scripts/create_site.py
 
 # Example Content
