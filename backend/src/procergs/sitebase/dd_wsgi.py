@@ -17,6 +17,10 @@ def _tracing_enabled() -> bool:
 def filter_factory(global_conf: Any, **local_conf: Any):
     """Create the Paste filter, enabling Datadog only when explicitly requested."""
 
+    from ddtrace import patch
+
+    patch(logging=True)
+
     def filter_app(app):
         if not _tracing_enabled():
             return app

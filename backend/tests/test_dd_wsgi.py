@@ -1,6 +1,19 @@
 from procergs.sitebase import dd_wsgi
 
 
+def test_filter_enables_datadog_logging_injection(monkeypatch):
+    calls = []
+
+    def fake_patch(**kwargs):
+        calls.append(kwargs)
+
+    monkeypatch.setattr("ddtrace.patch", fake_patch)
+
+    dd_wsgi.filter_factory({})
+
+    assert calls == [{"logging": True}]
+
+
 def test_filter_returns_original_application_when_tracing_is_not_enabled(
     monkeypatch,
 ):

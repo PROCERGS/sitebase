@@ -68,7 +68,10 @@ DD_AGENT_HOST=datadog-agent
 
 The generated Zope Paste configuration always contains the optional filter.
 The filter returns the original WSGI application while tracing is disabled, so
-the same backend image can be used by sites with or without Datadog.
+the same backend image can be used by sites with or without Datadog
+instrumentation. Logging injection is configured so the formatter remains
+valid even when no `DD_*` variables are present; in that case, logs outside a
+trace use empty service/environment values and zero trace/span IDs.
 
 
 ### Add features using `plonecli` or `bobtemplates.plone`
