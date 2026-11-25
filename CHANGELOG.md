@@ -1,5 +1,10 @@
 # Changes
 
+## 1.4.0 (2026-11-17)
+
+### Added
+- Opt-in Datadog WSGI tracing for backend
+
 ## 1.3.4 (2026-10-29)
 
 ### Changed
